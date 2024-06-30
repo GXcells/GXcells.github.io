@@ -25,6 +25,7 @@ function displayRecipes(recipes, container = document.getElementById('recipesCon
         const recipeDiv = document.createElement('div');
         recipeDiv.classList.add('recipe');
         const isFavorite = isFavoriteRecipe(recipe.name);
+        const isSelected = isSelectedRecipe(recipe.name);
         recipeDiv.innerHTML = `
             <img src="${recipe.IMG}" alt="${recipe.name}">
             <div class="recipe-info">
@@ -35,6 +36,7 @@ function displayRecipes(recipes, container = document.getElementById('recipesCon
                 <button class="view-ingredients">View Ingredients</button>
             </div>
             <i class="favorite-icon ${isFavorite ? 'fas' : 'far'} fa-heart ${isFavorite ? 'active' : ''}"></i>
+            <i class="list-icon ${isSelected ? 'fas' : 'far'} fa-list ${isSelected ? 'active' : ''}"></i>
         `;
         container.appendChild(recipeDiv);
 
@@ -42,6 +44,12 @@ function displayRecipes(recipes, container = document.getElementById('recipesCon
         favoriteIcon.addEventListener('click', (e) => {
             e.stopPropagation();
             toggleFavorite(recipe, favoriteIcon);
+        });
+
+        const listIcon = recipeDiv.querySelector('.list-icon');
+        listIcon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleSelection(recipe, listIcon);
         });
 
         const viewIngredientsButton = recipeDiv.querySelector('.view-ingredients');
@@ -69,14 +77,45 @@ function toggleFavorite(recipe, icon) {
     localStorage.setItem('favorites', JSON.stringify(favorites));
 }
 
+function toggleSelection(recipe, icon) {
+    const selected = JSON.parse(localStorage.getItem('selectedRecipes')) || [];
+    const index = selected.findIndex(sel => sel.name === recipe.name);
+
+    if (index === -1) {
+        selected.push(recipe);
+        icon.classList.remove('far');
+        icon.classList.add('fas', 'active');
+    } else {
+        selected.splice(index, 1);
+        icon.classList.remove('fas', 'active');
+        icon.classList.add('far');
+    }
+
+    localStorage.setItem('selectedRecipes', JSON.stringify(selected));
+}
+
 function isFavoriteRecipe(recipeName) {
     const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     return favorites.some(fav => fav.name === recipeName);
 }
 
+function isSelectedRecipe(recipeName) {
+    const selected = JSON.parse(localStorage.getItem('selectedRecipes')) || [];
+    return selected.some(sel => sel.name === recipeName);
+}
+
 function showFavorites() {
     const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     displayRecipes(favorites);
+}
+
+function showSelectionOfWeek() {
+    const selected = JSON.parse(localStorage.getItem('selectedRecipes')) || [];
+    const selectionContainer = document.getElementById('selectionOfWeekContainer');
+    selectionContainer.style.display = 'grid';
+    selectionContainer.innerHTML = '<h2>Selection of the Week</h2>';
+    displayRecipes(selected, selectionContainer);
+    document.getElementById('recipesContainer').style.display = 'none';
 }
 
 function showIngredients(recipe) {
@@ -106,17 +145,28 @@ async function initializeApp() {
     document.getElementById('newRecipesButton').addEventListener('click', () => {
         const randomRecipes = getRandomMainCourseRecipes(data);
         displayRecipes(randomRecipes);
+        document.getElementById('recipesContainer').style.display = 'grid';
+        document.getElementById('selectionOfWeekContainer').style.display = 'none';
     });
 
     document.getElementById('favorites').addEventListener('click', (e) => {
         e.preventDefault();
         showFavorites();
+        document.getElementById('recipesContainer').style.display = 'grid';
+        document.getElementById('selectionOfWeekContainer').style.display = 'none';
     });
 
     document.getElementById('shuffler').addEventListener('click', (e) => {
         e.preventDefault();
         const randomRecipes = getRandomMainCourseRecipes(data);
         displayRecipes(randomRecipes);
+        document.getElementById('recipesContainer').style.display = 'grid';
+        document.getElementById('selectionOfWeekContainer').style.display = 'none';
+    });
+
+    document.getElementById('selectionOfWeek').addEventListener('click', (e) => {
+        e.preventDefault();
+        showSelectionOfWeek();
     });
 
     // Close modal when clicking on the close button or outside the modal

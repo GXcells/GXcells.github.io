@@ -38,7 +38,7 @@
             color: #333;
             margin-bottom: 20px;
         }
-        #recipesContainer {
+        #recipesContainer, #selectionOfWeekContainer {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
@@ -102,6 +102,18 @@
         .favorite-icon.active {
             color: #e74c3c;
         }
+        .list-icon {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 24px;
+            color: #fff;
+            cursor: pointer;
+            text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+        }
+        .list-icon.active {
+            color: #2ecc71;
+        }
         #newRecipesButton {
             margin-top: 20px;
             padding: 10px 20px;
@@ -149,15 +161,26 @@
             text-decoration: none;
             cursor: pointer;
         }
+        #selectionOfWeekContainer {
+            display: none;
+            margin-top: 20px;
+        }
+        #selectionOfWeekContainer h2 {
+            color: #333;
+            margin-bottom: 20px;
+            grid-column: 1 / -1;
+        }
     </style>
 </head>
 <body>
     <div class="banner">
         <a href="index.html" id="shuffler">Shuffler</a>
         <a href="#" id="favorites">Favorites</a>
+        <a href="#" id="selectionOfWeek">Selection of the week</a>
     </div>
     <h1>Random Recipes</h1>
     <div id="recipesContainer"></div>
+    <div id="selectionOfWeekContainer"></div>
     <button id="newRecipesButton">Show New Recipes</button>
 
     <div id="ingredientsModal" class="modal">
