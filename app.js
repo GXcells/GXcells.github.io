@@ -36,7 +36,7 @@ function displayRecipes(recipes, container = document.getElementById('recipesCon
                 <button class="view-ingredients">View Ingredients</button>
             </div>
             <i class="favorite-icon ${isFavorite ? 'fas' : 'far'} fa-heart ${isFavorite ? 'active' : ''}"></i>
-            <i class="list-icon ${isSelected ? 'fas' : 'far'} fa-list ${isSelected ? 'active' : ''}"></i>
+            <i class="list-icon fas fa-list ${isSelected ? 'active' : ''}"></i>
         `;
         container.appendChild(recipeDiv);
 
