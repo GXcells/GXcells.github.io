@@ -63,7 +63,7 @@ function displayRecipes(recipes, container = document.getElementById('recipesCon
     });
 }
 // Function to display and store last random recipes
-function displayRandomRecipes() {
+function displayRandomRecipes(data) {
     const randomRecipes = getRandomMainCourseRecipes(data);
     displayRecipes(randomRecipes);
     storelast(randomRecipes);
@@ -167,7 +167,7 @@ async function initializeApp() {
     document.getElementById('newRecipesButton').addEventListener('click', () => {
         const randomRecipes = getRandomMainCourseRecipes(data);
         //displayRecipes(randomRecipes);
-        displayRandomRecipes()
+        displayRandomRecipes(data)
         document.getElementById('recipesContainer').style.display = 'grid';
         document.getElementById('selectionOfWeekContainer').style.display = 'none';
     });
