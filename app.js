@@ -13,8 +13,10 @@ async function loadRecipes() {
     }
 }
 
+
+
 function getRandomMainCourseRecipes(data, count = 5) {
-    const mainCourseRecipes = Object.values(data).filter(recipe => recipe.category === 'main course' && recipe.country === "Mexico");
+    const mainCourseRecipes = Object.values(data).filter(recipe => recipe.category === 'main course' );//&& recipe.country === "Mexico"
     const shuffled = mainCourseRecipes.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
 }
@@ -38,6 +40,7 @@ function displayRecipes(recipes, container = document.getElementById('recipesCon
             <i class="favorite-icon ${isFavorite ? 'fas' : 'far'} fa-heart ${isFavorite ? 'active' : ''}"></i>
             <i class="list-icon fas fa-list ${isSelected ? 'active' : ''}"></i>
         `;
+        //<i class="list-icon fas fa-list ${isSelected ? 'active' : ''}"></i>
         container.appendChild(recipeDiv);
 
         const favoriteIcon = recipeDiv.querySelector('.favorite-icon');
@@ -59,15 +62,21 @@ function displayRecipes(recipes, container = document.getElementById('recipesCon
         });
     });
 }
+// Function to display and store last random recipes
+function displayRandomRecipes() {
+    const randomRecipes = getRandomMainCourseRecipes(data);
+    displayRecipes(randomRecipes);
+    storelast(randomRecipes);
+}
 
 function toggleFavorite(recipe, icon) {
     const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     const index = favorites.findIndex(fav => fav.name === recipe.name);
-
+ 
     if (index === -1) {
         favorites.push(recipe);
-        icon.classList.remove('far');
-        icon.classList.add('fas', 'active');
+        icon.classList.remove('far');//fas is icon in style regular (see Font Awesome)
+        icon.classList.add('fas', 'active');//fas is icon in style solid (see Font Awesome)
     } else {
         favorites.splice(index, 1);
         icon.classList.remove('fas', 'active');
@@ -83,16 +92,23 @@ function toggleSelection(recipe, icon) {
 
     if (index === -1) {
         selected.push(recipe);
-        icon.classList.remove('far');
+        icon.classList.remove('fas');//fas is icon in style solid (see Font Awesome) I cannot use the far "list" icon because it is in paid version
         icon.classList.add('fas', 'active');
     } else {
         selected.splice(index, 1);
         icon.classList.remove('fas', 'active');
-        icon.classList.add('far');
+        icon.classList.add('fas');
     }
 
     localStorage.setItem('selectedRecipes', JSON.stringify(selected));
 }
+//function to store last recipes shown
+function storelast(recipes) {
+    localStorage.setItem('last_recipes', JSON.stringify(recipes));
+}
+
+
+
 
 function isFavoriteRecipe(recipeName) {
     const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
@@ -108,14 +124,20 @@ function showFavorites() {
     const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     displayRecipes(favorites);
 }
+//added
+//function showLast() {
+//    const last_recipes = JSON.parse(localStorage.getItem('last_recipes')) || [];
+//    displayRecipes(last_recipes);
+//}
 
 function showSelectionOfWeek() {
     const selected = JSON.parse(localStorage.getItem('selectedRecipes')) || [];
-    const selectionContainer = document.getElementById('selectionOfWeekContainer');
-    selectionContainer.style.display = 'grid';
-    selectionContainer.innerHTML = '<h2>Selection of the Week</h2>';
-    displayRecipes(selected, selectionContainer);
-    document.getElementById('recipesContainer').style.display = 'none';
+    //const selectionContainer = document.getElementById('selectionOfWeekContainer');
+    //selectionContainer.style.display = 'grid';
+   // selectionContainer.innerHTML = '<h2>Selection of the Week</h2>';
+    //displayRecipes(selected, selectionContainer);
+    displayRecipes(selected);
+    //document.getElementById('recipesContainer').style.display = 'none';
 }
 
 function showIngredients(recipe) {
@@ -144,7 +166,8 @@ async function initializeApp() {
     
     document.getElementById('newRecipesButton').addEventListener('click', () => {
         const randomRecipes = getRandomMainCourseRecipes(data);
-        displayRecipes(randomRecipes);
+        //displayRecipes(randomRecipes);
+        displayRandomRecipes()
         document.getElementById('recipesContainer').style.display = 'grid';
         document.getElementById('selectionOfWeekContainer').style.display = 'none';
     });
@@ -158,8 +181,12 @@ async function initializeApp() {
 
     document.getElementById('shuffler').addEventListener('click', (e) => {
         e.preventDefault();
-        const randomRecipes = getRandomMainCourseRecipes(data);
-        displayRecipes(randomRecipes);
+        //const randomRecipes = getRandomMainCourseRecipes(data);
+        //displayRecipes(randomRecipes);
+        
+        //showLast();
+        const last_recipes = JSON.parse(localStorage.getItem('last_recipes')) || [];
+        displayRecipes(last_recipes);
         document.getElementById('recipesContainer').style.display = 'grid';
         document.getElementById('selectionOfWeekContainer').style.display = 'none';
     });
@@ -167,6 +194,8 @@ async function initializeApp() {
     document.getElementById('selectionOfWeek').addEventListener('click', (e) => {
         e.preventDefault();
         showSelectionOfWeek();
+        document.getElementById('recipesContainer').style.display = 'grid';
+        document.getElementById('selectionOfWeekContainer').style.display = 'none';
     });
 
     // Close modal when clicking on the close button or outside the modal
@@ -179,8 +208,9 @@ async function initializeApp() {
     });
 
     // Initial load
-    const initialRecipes = getRandomMainCourseRecipes(data);
-    displayRecipes(initialRecipes);
+    //const initialRecipes = getRandomMainCourseRecipes(data);
+    const last_recipes = JSON.parse(localStorage.getItem('last_recipes')) || [];
+    displayRecipes(last_recipes);
 }
 
 // Start the app
