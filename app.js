@@ -16,7 +16,7 @@ async function loadRecipes() {
 
 
 function getRandomMainCourseRecipes(data, count = 5) {
-    const mainCourseRecipes = Object.values(data).filter(recipe => recipe.category === 'main course' );//&& recipe.country === "Mexico"
+    const mainCourseRecipes = Object.values(data).filter(recipe => recipe.category === 'plats' && recipe.difficulty === 'facile' || recipe.difficulty === 'tr\u00e8s facile');//&& recipe.country === "Mexico"
     const shuffled = mainCourseRecipes.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
 }
@@ -32,8 +32,10 @@ function displayRecipes(recipes, container = document.getElementById('recipesCon
             <img src="${recipe.IMG}" alt="${recipe.name}">
             <div class="recipe-info">
                 <h2>${recipe.name}</h2>
-                <p>Country: ${recipe.country}</p>
-                <p>Prep Time: ${recipe.prep_time}</p>
+                <p>Selection: ${recipe.selection}</p>
+                <p>Prep Time: ${recipe.temps_prep}</p>
+                <p>Total Time: ${recipe.temps_total}</p>
+                <p>Difficulty: ${recipe.difficulty}</p>
                 <a href="${recipe.URL}" target="_blank">View Recipe</a>
                 <button class="view-ingredients">View Ingredients</button>
             </div>
