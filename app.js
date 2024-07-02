@@ -16,7 +16,7 @@ async function loadRecipes() {
 
 
 function getRandomMainCourseRecipes(data, count = 5) {
-    const mainCourseRecipes = Object.values(data).filter(recipe => recipe.category === 'plats' && recipe.difficulty === 'facile' || recipe.difficulty === 'tr\u00e8s facile');//&& recipe.country === "Mexico"
+    const mainCourseRecipes = Object.values(data).filter(recipe => recipe.category === 'plats' && (recipe.difficulty === 'facile' || recipe.difficulty === 'tr\u00e8s facile') && recipe.temps_prep_min <= 30);//&& recipe.country === "Mexico"
     const shuffled = mainCourseRecipes.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
 }
