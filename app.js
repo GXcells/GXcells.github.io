@@ -24,24 +24,28 @@ function getRandomMainCourseRecipes(data, count = 5) {
 function displayRecipes(recipes, container = document.getElementById('recipesContainer')) {
     container.innerHTML = '';
     recipes.forEach(recipe => {
+        
         const recipeDiv = document.createElement('div');
         recipeDiv.classList.add('recipe');
         const isFavorite = isFavoriteRecipe(recipe.name);
         const isSelected = isSelectedRecipe(recipe.name);
         recipeDiv.innerHTML = `
             <img src="${recipe.IMG}" alt="${recipe.name}">
-            <div class="recipe-info">
+            <div class="recipe-info" >
                 <h2>${recipe.name}</h2>
+                
                 <p>Selection: ${recipe.selection}</p>
                 <p>Prep Time: ${recipe.temps_prep}</p>
                 <p>Total Time: ${recipe.temps_total}</p>
                 <p>Difficulty: ${recipe.difficulty}</p>
                 <a href="${recipe.URL}" target="_blank">View Recipe</a>
                 <button class="view-ingredients">View Ingredients</button>
+                
             </div>
             <i class="favorite-icon ${isFavorite ? 'fas' : 'far'} fa-heart ${isFavorite ? 'active' : ''}"></i>
             <i class="list-icon fas fa-list ${isSelected ? 'active' : ''}"></i>
         `;
+        //console.log(recipe)
         //<i class="list-icon fas fa-list ${isSelected ? 'active' : ''}"></i>
         container.appendChild(recipeDiv);
 
@@ -61,7 +65,8 @@ function displayRecipes(recipes, container = document.getElementById('recipesCon
         viewIngredientsButton.addEventListener('click', (e) => {
             e.stopPropagation();
             showIngredients(recipe);
-        });
+        });    
+
     });
 }
 // Function to display and store last random recipes
@@ -110,8 +115,6 @@ function storelast(recipes) {
 }
 
 
-
-
 function isFavoriteRecipe(recipeName) {
     const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     return favorites.some(fav => fav.name === recipeName);
@@ -125,6 +128,7 @@ function isSelectedRecipe(recipeName) {
 function showFavorites() {
     const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     displayRecipes(favorites);
+    //console.log(favorites)
 }
 //added
 //function showLast() {
@@ -147,21 +151,100 @@ function showIngredients(recipe) {
     const modalTitle = document.getElementById('modalTitle');
     const ingredientsList = document.getElementById('ingredientsList');
 
-    modalTitle.textContent = `Ingredients for ${recipe.name}`;
     ingredientsList.innerHTML = '';
-    recipe.ingredients.forEach(ingredient => {
-        const li = document.createElement('li');
-        li.textContent = ingredient;
-        ingredientsList.appendChild(li);
-    });
+    const ingredientsObj = recipe.ingredients_default_;
+    let ingredientString = "";
 
+    for (const [ingredient, details] of Object.entries(ingredientsObj)) {
+    const { count, unit } = details;
+    
+        ingredientString = `${ingredient}: ${count} ${unit} Baby `;
+        const li = document.createElement('li');
+        li.textContent = ingredientString
+        ingredientsList.appendChild(li);
+    modalTitle.textContent = `Liste of ingredients for ${recipe.name}`;  
     modal.style.display = 'block';
+    }
 }
+
+function show_sumingredients(recipe) {
+    const indexname = document.getElementById('ingredientsModal');
+    const modal = document.getElementById('ingredientsModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const ingredientsList = document.getElementById('ingredientsList');
+    //const sumingredientsList = document.getElementById('sumIngredientsList');
+    ingredientsList.innerHTML = '';
+    const ingredientsObj = recipe.ingredients_default_;
+    let ingredientString = "";
+
+    for (const [ingredient, details] of Object.entries(ingredientsObj)) {
+    const { count, unit } = details;
+    
+        ingredientString = `${ingredient}: ${count} ${unit} `;
+        const li = document.createElement('li');
+        li.textContent = ingredientString
+        ingredientsList.appendChild(li);
+    
+    };
+ 
+    
+    modalTitle.textContent = `Ingredients for ${recipe.name}`;  
+    modal.style.display = 'block';
+} 
 
 function closeModal() {
     const modal = document.getElementById('ingredientsModal');
     modal.style.display = 'none';
 }
+
+
+function aggregateIngredients() {
+    const ingredientMap = {};
+    const selectedRecipes = JSON.parse(localStorage.getItem('selectedRecipes')) || [];
+    
+    selectedRecipes.forEach(recipe => {
+        const ingredients = recipe.ingredients_default_;
+        
+        for (const [ingredient, details] of Object.entries(ingredients)) {
+            const unit = details.unit;
+            const count = parseFloat(details.count) || 0;
+
+            if (!ingredientMap[ingredient]) {
+                ingredientMap[ingredient] = { unit, count };
+            } else if (ingredientMap[ingredient].unit === unit) {
+                ingredientMap[ingredient].count += count;
+            } else {
+                // Handle different units (if necessary, e.g., convert units)
+                console.warn(`Different units found for ${ingredient}: ${ingredientMap[ingredient].unit} and ${unit}`);
+            }
+        }
+    });
+
+    return ingredientMap;
+}
+
+// Function to display aggregated ingredients
+function showAggregatedIngredients() {
+    const modal = document.getElementById('ingredientsModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const ingredientsList = document.getElementById('ingredientsList');
+
+    ingredientsList.innerHTML = '';
+    const aggregatedIngredients = aggregateIngredients();
+
+    for (const [ingredient, details] of Object.entries(aggregatedIngredients)) {
+        const { count, unit } = details;
+        const ingredientString = `${ingredient}: ${count.toFixed(2)} ${unit}`;
+        const li = document.createElement('li');
+        li.textContent = ingredientString;
+        ingredientsList.appendChild(li);
+    }
+
+    modalTitle.textContent = 'Aggregated Ingredients for Selected Recipes';
+    modal.style.display = 'block';
+}
+
+
 
 async function initializeApp() {
     const data = await loadRecipes();
@@ -173,6 +256,15 @@ async function initializeApp() {
         document.getElementById('recipesContainer').style.display = 'grid';
         document.getElementById('selectionOfWeekContainer').style.display = 'none';
     });
+    document.getElementById('showsumIngredientsButton').addEventListener('click', () => {
+        const randomRecipes = getRandomMainCourseRecipes(data);
+        //displayRecipes(randomRecipes);
+        showAggregatedIngredients()
+        document.getElementById('recipesContainer').style.display = 'grid';
+        document.getElementById('selectionOfWeekContainer').style.display = 'none';
+    });
+
+
 
     document.getElementById('favorites').addEventListener('click', (e) => {
         e.preventDefault();
@@ -200,6 +292,9 @@ async function initializeApp() {
         document.getElementById('selectionOfWeekContainer').style.display = 'none';
     });
 
+
+
+
     // Close modal when clicking on the close button or outside the modal
     document.querySelector('.close').addEventListener('click', closeModal);
     window.addEventListener('click', (event) => {
@@ -208,6 +303,9 @@ async function initializeApp() {
             closeModal();
         }
     });
+
+    
+
 
     // Initial load
     //const initialRecipes = getRandomMainCourseRecipes(data);
