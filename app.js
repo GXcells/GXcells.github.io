@@ -179,7 +179,7 @@ function showIngredients(recipe) {
     for (const [ingredient, details] of Object.entries(ingredientsObj)) {
     const { count, unit } = details;
     
-        ingredientString = `${ingredient}: ${count} ${unit} Baby `;
+        ingredientString = `${ingredient}: ${count} ${unit}; `;
         const li = document.createElement('li');
         li.textContent = ingredientString
         ingredientsList.appendChild(li);
@@ -253,20 +253,13 @@ function showAggregatedIngredients() {
 }
 
 function CopyToClipboard() {
-    //var r1 = document.createRange();
-    //var r2 = document.createRange();
     var copiedText =''
     var r1=document.getElementById("modalrecipeName").textContent;
     var r2=(document.getElementById("ingredientsList").textContent).replaceAll(";","\n");
-    //var sr1 = r1.toString();
-    //var sr2 = r2.toString();
+
     console.log(r2)
     copiedText = `${r1}\n\n${r2}`;
-    //window.getSelection().removeAllRanges();
-    //window.getSelection().addRange(r1);
-    //window.getSelection().addRange(r2);
-    //document.execCommand('copy');
-    //window.getSelection().removeAllRanges();
+
     navigator.clipboard.writeText(copiedText);
 }
 
