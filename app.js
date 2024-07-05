@@ -1,3 +1,20 @@
+////////////
+///Need to fix sometimes same ingredient but 1 rcipe does not say how much so need to add a bit
+///   OK  ///  Need to add serving number in list of ingredients
+/// Find a way for serving number and sum list ingredients for 6 personnes but also when not 6 personnes 
+/// Need to fix display title list ingredients etc
+/// Need to add recipeid in the original data.json from colab notebook
+/// Add button to copy the list for shopping
+/// In aggregate ingredients add list of recipes and number of serving per recipe
+/// better style for the Show sum ingredients
+/// Create another dialog to say if we are sure to remove a favorite
+/// Save button to save list of favorites recipes in json or other format
+
+///Return values of modal.title modal.ingredients modal serving to "" when the modal is closed (to avoid that it is reused in another modal if the functio nthat calls the modal does not implement t ochange these)
+////////////////////////
+////// LARGE CHANGE TO DO : modify code so that i nfavorites and recipes it adds only the "recipeID" and then use it to retrieve recipes directly fro mdatabase instead of saving the recipes themselves in favorites and slected recipes in local storage
+////////////////////////
+
 // Function to load recipes from data.json
 async function loadRecipes() {
     try {
@@ -16,7 +33,7 @@ async function loadRecipes() {
 
 
 function getRandomMainCourseRecipes(data, count = 5) {
-    const mainCourseRecipes = Object.values(data).filter(recipe => recipe.category === 'plats' && (recipe.difficulty === 'facile' || recipe.difficulty === 'tr\u00e8s facile') && recipe.temps_prep_min <= 30);//&& recipe.country === "Mexico"
+    const mainCourseRecipes = Object.values(data).filter(recipe => recipe.category === 'platprincipal' && (recipe.difficulty === 'facile' || recipe.difficulty === 'tr\u00e8s facile') && recipe.temps_prep_min <= 30);//&& recipe.country === "Mexico"
     const shuffled = mainCourseRecipes.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
 }
@@ -35,6 +52,7 @@ function displayRecipes(recipes, container = document.getElementById('recipesCon
                 <h2>${recipe.name}</h2>
                 
                 <p>Selection: ${recipe.selection}</p>
+                <p>Category: ${recipe.category}</p>
                 <p>Prep Time: ${recipe.temps_prep}</p>
                 <p>Total Time: ${recipe.temps_total}</p>
                 <p>Difficulty: ${recipe.difficulty}</p>
@@ -149,7 +167,10 @@ function showSelectionOfWeek() {
 function showIngredients(recipe) {
     const modal = document.getElementById('ingredientsModal');
     const modalTitle = document.getElementById('modalTitle');
+    const modalrecipeName = document.getElementById('modalrecipeName');
     const ingredientsList = document.getElementById('ingredientsList');
+    const serving = document.getElementById('servingDefault');
+    
 
     ingredientsList.innerHTML = '';
     const ingredientsObj = recipe.ingredients_default_;
@@ -162,42 +183,21 @@ function showIngredients(recipe) {
         const li = document.createElement('li');
         li.textContent = ingredientString
         ingredientsList.appendChild(li);
-    modalTitle.textContent = `Liste of ingredients for ${recipe.name}`;  
+    modalTitle.textContent = `Liste of ingredients`;
+    modalrecipeName.textContent = `${recipe.name}`;
+    serving.textContent = `Pour ${recipe.serving_nb} ${recipe.serving_unit} `;
     modal.style.display = 'block';
     }
 }
 
-function show_sumingredients(recipe) {
-    const indexname = document.getElementById('ingredientsModal');
-    const modal = document.getElementById('ingredientsModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const ingredientsList = document.getElementById('ingredientsList');
-    //const sumingredientsList = document.getElementById('sumIngredientsList');
-    ingredientsList.innerHTML = '';
-    const ingredientsObj = recipe.ingredients_default_;
-    let ingredientString = "";
 
-    for (const [ingredient, details] of Object.entries(ingredientsObj)) {
-    const { count, unit } = details;
-    
-        ingredientString = `${ingredient}: ${count} ${unit} `;
-        const li = document.createElement('li');
-        li.textContent = ingredientString
-        ingredientsList.appendChild(li);
-    
-    };
- 
-    
-    modalTitle.textContent = `Ingredients for ${recipe.name}`;  
-    modal.style.display = 'block';
-} 
 
 function closeModal() {
     const modal = document.getElementById('ingredientsModal');
     modal.style.display = 'none';
 }
 
-
+// function to aggregate ingredients from the "selected recipes" (to sum al lsimilar ingredients for shopping)
 function aggregateIngredients() {
     const ingredientMap = {};
     const selectedRecipes = JSON.parse(localStorage.getItem('selectedRecipes')) || [];
@@ -223,11 +223,14 @@ function aggregateIngredients() {
     return ingredientMap;
 }
 
-// Function to display aggregated ingredients
+// Function to display aggregated ingredients in the modal dialog
 function showAggregatedIngredients() {
     const modal = document.getElementById('ingredientsModal');
     const modalTitle = document.getElementById('modalTitle');
     const ingredientsList = document.getElementById('ingredientsList');
+    const modalrecipeName = document.getElementById('modalrecipeName');
+    
+    const serving = document.getElementById('servingDefault');
 
     ingredientsList.innerHTML = '';
     const aggregatedIngredients = aggregateIngredients();
@@ -241,6 +244,8 @@ function showAggregatedIngredients() {
     }
 
     modalTitle.textContent = 'Aggregated Ingredients for Selected Recipes';
+    modalrecipeName.textContent = ``;
+    serving.textContent = ``;
     modal.style.display = 'block';
 }
 
@@ -263,8 +268,10 @@ async function initializeApp() {
         document.getElementById('recipesContainer').style.display = 'grid';
         document.getElementById('selectionOfWeekContainer').style.display = 'none';
     });
-
-
+    document.getElementById('copytoclipboardButton').addEventListener('click', () => {           
+        myFunction()
+    });
+    
 
     document.getElementById('favorites').addEventListener('click', (e) => {
         e.preventDefault();
