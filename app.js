@@ -3,7 +3,7 @@
 ///   OK  ///  Need to add serving number in list of ingredients
 /// Find a way for serving number and sum list ingredients for 6 personnes but also when not 6 personnes 
 /// Need to fix display title list ingredients etc
-/// Need to add recipeid in the original data.json from colab notebook
+///   OK  ///  Need to add recipeid in the original data.json from colab notebook
 /// Add button to copy the list for shopping
 /// In aggregate ingredients add list of recipes and number of serving per recipe
 /// better style for the Show sum ingredients
@@ -198,10 +198,9 @@ function closeModal() {
 }
 
 // function to aggregate ingredients from the "selected recipes" (to sum al lsimilar ingredients for shopping)
-function aggregateIngredients() {
+function aggregateIngredients(selectedRecipes) {
     const ingredientMap = {};
-    const selectedRecipes = JSON.parse(localStorage.getItem('selectedRecipes')) || [];
-    
+        
     selectedRecipes.forEach(recipe => {
         const ingredients = recipe.ingredients_default_;
         
@@ -215,7 +214,7 @@ function aggregateIngredients() {
                 ingredientMap[ingredient].count += count;
             } else {
                 // Handle different units (if necessary, e.g., convert units)
-                console.warn(`Different units found for ${ingredient}: ${ingredientMap[ingredient].unit} and ${unit}`);
+                console.warn(`Different units found for ${ingredient}: ${ingredientMap[ingredient].unit} and ${unit};`);
             }
         }
     });
@@ -229,26 +228,47 @@ function showAggregatedIngredients() {
     const modalTitle = document.getElementById('modalTitle');
     const ingredientsList = document.getElementById('ingredientsList');
     const modalrecipeName = document.getElementById('modalrecipeName');
-    
+    const selectedRecipes = JSON.parse(localStorage.getItem('selectedRecipes')) || [];
+    var recipesNames = ''
     const serving = document.getElementById('servingDefault');
 
     ingredientsList.innerHTML = '';
-    const aggregatedIngredients = aggregateIngredients();
+    const aggregatedIngredients = aggregateIngredients(selectedRecipes);
 
+    selectedRecipes.forEach(recipe => {
+        recipesNames += `${recipe.name}, `;
+    })
     for (const [ingredient, details] of Object.entries(aggregatedIngredients)) {
         const { count, unit } = details;
-        const ingredientString = `${ingredient}: ${count.toFixed(2)} ${unit}`;
+        const ingredientString = `${ingredient}: ${count.toFixed(2)} ${unit};`;
         const li = document.createElement('li');
         li.textContent = ingredientString;
         ingredientsList.appendChild(li);
     }
 
-    modalTitle.textContent = 'Aggregated Ingredients for Selected Recipes';
-    modalrecipeName.textContent = ``;
+    modalTitle.textContent = 'Aggregated Ingredients for Selected recipes of the week';
+    modalrecipeName.textContent = `${recipesNames}`;
     serving.textContent = ``;
     modal.style.display = 'block';
 }
 
+function CopyToClipboard() {
+    //var r1 = document.createRange();
+    //var r2 = document.createRange();
+    var copiedText =''
+    var r1=document.getElementById("modalrecipeName").textContent;
+    var r2=(document.getElementById("ingredientsList").textContent).replaceAll(";","\n");
+    //var sr1 = r1.toString();
+    //var sr2 = r2.toString();
+    console.log(r2)
+    copiedText = `${r1}\n\n${r2}`;
+    //window.getSelection().removeAllRanges();
+    //window.getSelection().addRange(r1);
+    //window.getSelection().addRange(r2);
+    //document.execCommand('copy');
+    //window.getSelection().removeAllRanges();
+    navigator.clipboard.writeText(copiedText);
+}
 
 
 async function initializeApp() {
@@ -269,7 +289,7 @@ async function initializeApp() {
         document.getElementById('selectionOfWeekContainer').style.display = 'none';
     });
     document.getElementById('copytoclipboardButton').addEventListener('click', () => {           
-        myFunction()
+        CopyToClipboard()
     });
     
 
