@@ -15,6 +15,9 @@
             flex-direction: column;
             align-items: center;
         }
+        .blockedScroll{
+            overflow-y:hidden;
+        }
         .banner {
             position: fixed;
             top: 0;
@@ -129,6 +132,23 @@
         #newRecipesButton:hover {
             background-color: #27ae60;
         }
+
+        #newRecipesButton1 {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #newRecipesButton1:hover {
+            background-color: #27ae60;
+        }
+
         #showsumIngredientsButton {
             margin-top: 20px;
             padding: 10px 20px;
@@ -198,16 +218,87 @@
             margin-bottom: 20px;
             grid-column: 1 / -1;
         }
+
+        /* Style of Side nav*/
+        .menu-toggle {
+            
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1000;
+            color: #7EBDC3;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -250px; /* makes the sidebar hidden because at -250pixels o nthe left and the sidebar is 250pixel width so becomes hidden*/
+            width: 250px;
+            height: 100%;
+            background: #333;
+            transition: left 0.3s ease;
+            z-index: 500;
+        }
+
+        .sidebar ul {
+            position: absolute;
+            padding-top: 4rem;
+            padding-left: 0;
+            list-style: none;
+            
+            margin: 0;
+        }
+
+        .sidebar ul li {
+            padding: 20px;
+            border-bottom: 1px solid #444;
+        }
+
+        .sidebar ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar ul li a i {
+            margin-right: 10px;
+        }
+
+        .sidebar.open {  /* if element with class .sidebar.open it will make the element left to be set at 0 o nthe screen so it will show the sidebar*/
+            left: 0;
+        }
+
+
     </style>
 </head>
 <body>
     <div class="banner">
+        <div class="menu-toggle">
+            <i class="fas fa-bars" id="menu-icon"></i>
+            
+        </div>
+        <nav class="sidebar">
+            <ul>
+                <li><a href="#"><i class="fa-solid fa-house"></i> Home</a></li>
+                <li><a href="#" onclick="saveData()"><i class="fas fa-file-download" id="save-icon" onclick="saveData()"></i> Save data</a></li>
+                <li><a href="#" onclick="loadData()"><i class="fas fa-file-upload" id="load-icon" onclick="loadData()"></i> Load data</a></li>
+                
+                <li><a href="#"><i class="fas fa-info"></i> About</a></li>
+            </ul>
+        </nav>
         <a href="index.html" id="shuffler">Shuffler</a>
         <a href="#" id="favorites">Favorites</a>
         <a href="#" id="selectionOfWeek">Selection of the week</a>
     </div>
+
+
+
+
     <h1>Random Main Course Recipes</h1>
+    <button id="newRecipesButton1">Show New Recipes</button>
     <div id="recipesContainer"></div>
+    
     <div id="selectionOfWeekContainer"></div>
     <button id="newRecipesButton">Show New Recipes</button>
     <button id="showsumIngredientsButton">Show all Ingredients for the week selection</button>

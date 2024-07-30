@@ -1,0 +1,138 @@
+{
+    "0": {
+        "name": "French Dishh",
+        "country": "France",
+        "prep_time": "15 min",
+        "category": "main course",
+        "IMG": "https://assets.afcdn.com/recipe/20191025/101153_w1024h768c1cx2592cy1728cxt0cyt0cxb5184cyb3456.jpg",
+        "URL": "https://www.marmiton.org/recettes/recette_mousse-au-chocolat-au-thermomix_382571.aspx",
+        "ingredients": [
+            "200g dark chocolate",
+            "6 eggs",
+            "50g sugar",
+            "1 pinch of salt"
+        ]
+    },
+    "1": {
+        "name": "Italian Dish",
+        "country": "Italy",
+        "prep_time": "20 min",
+        "category": "main course",
+        "IMG": "https://assets.afcdn.com/recipe/20140223/45644_w1024h768c1cx1824cy1368.jpg",
+        "URL": "https://www.marmiton.org/recettes/recette_sauce-blanche-froide-a-l-echalote-et-estragon_315170.aspx",
+        "ingredients": [
+            "2 cups heavy cream",
+            "1 shallot, minced",
+            "2 tbsp fresh tarragon, chopped",
+            "Salt and pepper to taste"
+        ]
+    },
+    "2": {
+        "name": "Spanish Dessert",
+        "country": "Spain",
+        "prep_time": "25 min",
+        "category": "dessert",
+        "IMG": "https://assets.afcdn.com/recipe/20160913/32524_w1024h768c1cx2880cy1920.jpg",
+        "URL": "https://www.marmiton.org/recettes/recette_knodels-farcis-aux-prunes-quenelles-aux-quetsches_10901.aspx",
+        "ingredients": [
+            "500g plums",
+            "500g potatoes",
+            "150g flour",
+            "2 eggs",
+            "50g sugar"
+        ]
+    },
+    "3": {
+        "name": "French Main Course",
+        "country": "France",
+        "prep_time": "30 min",
+        "category": "main course",
+        "IMG": "https://assets.afcdn.com/recipe/20161005/1099_w1024h768c1cx2592cy1728.jpg",
+        "URL": "https://www.marmiton.org/recettes/recette_salade-de-legumes-grilles_44826.aspx",
+        "ingredients": [
+            "2 zucchinis",
+            "2 eggplants",
+            "2 bell peppers",
+            "1 red onion",
+            "Olive oil",
+            "Balsamic vinegar",
+            "Salt and pepper"
+        ]
+    },
+    "4": {
+        "name": "Japanese Dish",
+        "country": "Japan",
+        "prep_time": "10 min",
+        "category": "main course",
+        "IMG": "https://assets.afcdn.com/recipe/20191109/102147_w1024h768c1cx2144cy1424cxt0cyt0cxb4288cyb2848.jpg",
+        "URL": "https://www.marmiton.org/recettes/recette_soupe-a-l-oignon-au-cookeo_382876.aspx",
+        "ingredients": [
+            "4 large onions",
+            "2 tbsp butter",
+            "1 tbsp flour",
+            "1 liter beef broth",
+            "100ml white wine",
+            "Salt and pepper"
+        ]
+    },
+    "5": {
+        "name": "Mexican Appetizer",
+        "country": "Mexico",
+        "prep_time": "45 min",
+        "category": "main course",
+        "IMG": "https://assets.afcdn.com/recipe/20200414/109653_w1024h768c1cx1639cy1658cxt0cyt0cxb3278cyb3316.jpg",
+        "URL": "https://www.marmiton.org/recettes/recette_gnocchi-de-patate-douce_392192.aspx",
+        "ingredients": [
+            "500g sweet potatoes",
+            "150g flour",
+            "1 egg",
+            "Salt",
+            "Nutmeg"
+        ]
+    },
+    "6": {
+        "name": "tatin echalotes",
+        "country": "Mexico",
+        "prep_time": "45 min",
+        "category": "main course",
+        "IMG": "https://assets.afcdn.com/recipe/20141205/7498_w1024h768c1cx2808cy1872.jpg",
+        "URL": "https://www.marmiton.org/recettes/recette_tatin-d-echalotes-et-de-canard_333545.aspx",
+        "ingredients": [
+            "500g sweet potatoes",
+            "150g flour",
+            "1 egg",
+            "Salt",
+            "Nutmeg"
+        ]
+    },
+    "7": {
+        "name": "Pommes de terre farcies au sardines",
+        "country": "Mexico",
+        "prep_time": "45 min",
+        "category": "main course",
+        "IMG": "https://assets.afcdn.com/recipe/20230126/139871_w1024h768c1cx1000cy750cxt0cyt0cxb2000cyb1500.jpg",
+        "URL": "https://www.marmiton.org/recettes/recette_pommes-de-terre-farcies-aux-sardines_52625.aspx",
+        "ingredients": [
+            "500g sweet potatoes",
+            "150g flour",
+            "1 egg",
+            "Salt",
+            "Nutmeg"
+        ]
+    },
+    "8": {
+        "name": "Tarte ete aux abricots",
+        "country": "Mexico",
+        "prep_time": "45 min",
+        "category": "main course",
+        "IMG": "https://assets.afcdn.com/recipe/20160223/20426_w1024h768c1cx250cy375.jpg",
+        "URL": "https://www.marmiton.org/recettes/recette_tarte-d-ete-aux-abricots_61223.aspx",
+        "ingredients": [
+            "500g sweet potatoes",
+            "150g flour",
+            "1 egg",
+            "Salt",
+            "Nutmeg"
+        ]
+    }
+}

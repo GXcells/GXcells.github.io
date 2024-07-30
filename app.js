@@ -15,7 +15,7 @@
 ////// LARGE CHANGE TO DO : modify code so that i nfavorites and recipes it adds only the "recipeID" and then use it to retrieve recipes directly fro mdatabase instead of saving the recipes themselves in favorites and slected recipes in local storage
 ////////////////////////
 
-// Function to load recipes from data.json
+// Function to load recipes from database data.json
 async function loadRecipes() {
     try {
         const response = await fetch('./data.json');
@@ -263,6 +263,81 @@ function CopyToClipboard() {
     navigator.clipboard.writeText(copiedText);
 }
 
+///////////////////////// LEFT SIDEBAR MENU EVENT LISTENERS ///////////////////////////////////////////////////////
+document.addEventListener('DOMContentLoaded', function() {
+    const menuToggle = document.querySelector('.menu-toggle');
+    const menuIcon = document.getElementById('menu-icon');
+    const sidebar = document.querySelector('.sidebar');
+    const bodySel = document .querySelector('body');
+
+    menuToggle.addEventListener('click', function() {
+        sidebar.classList.toggle('open');
+        // this toggle means turn on or off the class .open in the sidebar depending on if it was on or off before running the button (that is defiend by document.querySelector('.sidebar'); this does not remove the .class .sidebar' but it add the class .open to .sidebar. 
+        //so if toggle on this will trigger the css style .sidebar.open that has left =0 so wil lshow the sidebar because before was left =-250. 
+        if (sidebar.classList.contains('open')) {
+            console.log("Sidebar is open")
+            menuIcon.classList.remove('fa-bars');
+            menuIcon.classList.add('fa-times');
+            bodySel.classList.add('blockedScroll');//this add the class "blockedScroll" to bodysel which is the HTML element "Body" selected just above using const bodySel = document .querySelector('body');
+        } else {
+            menuIcon.classList.remove('fa-times');
+            menuIcon.classList.add('fa-bars');
+            bodySel.classList.remove('blockedScroll');
+        }
+    });
+});
+///////////////////////////
+function saveData() {
+    const last_recipesList = JSON.parse(localStorage.getItem('last_recipes')) || [];
+    const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    const selected = JSON.parse(localStorage.getItem('selectedRecipes')) || [];
+    const data = JSON.stringify({
+        version: "v6.10",
+        last_recipes: last_recipesList,
+        favorites: favorites,
+        selected: selected
+    }, null, 4); // Indentation of 4 spaces
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'random_recipe.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+
+//////////////////////////////////////////////
+function loadData() {
+    if (confirm(`Loading data will overwrite current favorites and recipes of the week.
+        You should save current state to file before continuing`)) {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'application/json';
+        input.onchange = function(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = JSON.parse(e.target.result);
+                const last_recipes = data.last_recipes || [];
+                const favorites = data.favorites || [];
+                const selected = data.selected || [];
+                localStorage.setItem('last_recipes', JSON.stringify(last_recipes));
+                localStorage.setItem('favorites', JSON.stringify(favorites));
+                localStorage.setItem('selectedRecipes', JSON.stringify(selected));
+                displayRecipes(last_recipes);
+            };
+            reader.readAsText(file);
+        };
+        input.click();
+    };
+}
+
+
+
+/////////////////////////////////////////////
 
 async function initializeApp() {
     const data = await loadRecipes();
@@ -274,6 +349,14 @@ async function initializeApp() {
         document.getElementById('recipesContainer').style.display = 'grid';
         document.getElementById('selectionOfWeekContainer').style.display = 'none';
     });
+    document.getElementById('newRecipesButton1').addEventListener('click', () => {
+        const randomRecipes = getRandomMainCourseRecipes(data);
+        //displayRecipes(randomRecipes);
+        displayRandomRecipes(data)
+        document.getElementById('recipesContainer').style.display = 'grid';
+        document.getElementById('selectionOfWeekContainer').style.display = 'none';
+    });
+
     document.getElementById('showsumIngredientsButton').addEventListener('click', () => {
         const randomRecipes = getRandomMainCourseRecipes(data);
         //displayRecipes(randomRecipes);
