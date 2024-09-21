@@ -269,11 +269,27 @@
             left: 0;
         }
 
+        .hr_solid {
+            border: 0;
+            clear:both;
+            display:block;
+            width: 96%;               
+            background-color:#555555;
+            height: 0.1rem;
+            
+        }
+        .filterDivClass{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap:0.5rem;/* allows to have a gap between items of this flex container */
 
+        }
     </style>
 </head>
 <body>
     <div class="banner">
+
         <div class="menu-toggle">
             <i class="fas fa-bars" id="menu-icon"></i>
             
@@ -281,6 +297,7 @@
         <nav class="sidebar">
             <ul>
                 <li><a href="#"><i class="fa-solid fa-house"></i> Home</a></li>
+                <li><a href="#" id="allRecipesRandomPageBtn"><i class="fas fa-check-double" id="filter-icon"></i> Filter recipes</a></li>
                 <li><a href="#" onclick="saveData()"><i class="fas fa-file-download" id="save-icon" onclick="saveData()"></i> Save data</a></li>
                 <li><a href="#" onclick="loadData()"><i class="fas fa-file-upload" id="load-icon" onclick="loadData()"></i> Load data</a></li>
                 
@@ -296,12 +313,17 @@
 
 
     <h1>Random Main Course Recipes</h1>
+    <div id="filterDiv" class="filterDivClass"></div>
+    <hr class="hr_solid">
     <button id="newRecipesButton1">Show New Recipes</button>
+
     <div id="recipesContainer"></div>
     
     <div id="selectionOfWeekContainer"></div>
+    <hr class="hr_solid">
     <button id="newRecipesButton">Show New Recipes</button>
     <button id="showsumIngredientsButton">Show all Ingredients for the week selection</button>
+
     <div id="ingredientsModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -315,6 +337,7 @@
         </div>
     </div>
     
+  
     
 
     <!-- Dialog structure -->

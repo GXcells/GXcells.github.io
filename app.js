@@ -37,6 +37,67 @@ function getRandomMainCourseRecipes(data, count = 5) {
     const shuffled = mainCourseRecipes.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
 }
+function createSetFilter(data,property){
+        const uniqueProperty = new Set();
+        console.log(property);
+        // Collect unique property values
+        Object.values(data).forEach(item => {
+            if (item[property]) {//we cannot use item.property here we need to use item[property] because our property comes as a string when we call the function createSetFilter
+                uniqueProperty.add(item[property]);
+            }
+        });
+        // Convert Set to Array and sort
+        const sortedProperty= Array.from(uniqueProperty).sort();
+        return sortedProperty
+        }
+
+function allRecipesRandomPage(data) {
+    
+    const container = document.getElementById('recipesContainer');
+    const filtListCont = document.getElementById("filterDiv");
+    //make selection for category
+    {
+    const selectCategory = document.createElement('select');
+    selectCategory.id= "selectCategory";
+    selectCategory.required=true;// This  indicates that an option with a non-empty string value must be selected. 
+    // This allows to create an option with "" value to use as placeholder because "select" has no placeholder otherwise
+    const option = document.createElement('option');//for our placeholder
+    option.value = "";//for our placeholder
+    option.textContent = "Select a dish category";//for our placeholder
+    selectCategory.appendChild(option);//for our placeholder
+    filtListCont.appendChild(selectCategory);  
+    const listCategory = createSetFilter(data,"category");
+        listCategory.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category;
+            option.textContent = category;
+            selectCategory.appendChild(option);
+        });
+    
+    }
+    //make selection for difficulty
+    {
+        const selectDifficulty = document.createElement('select');
+        selectDifficulty.id= "selectDifficulty";
+        selectDifficulty.required=true;// This  indicates that an option with a non-empty string value must be selected. 
+        // This allows to create an option with "" value to use as placeholder because "select" has no placeholder otherwise
+        const option = document.createElement('option');//for our placeholder
+        option.value = "";//for our placeholder
+        option.textContent = "Select a difficulty";//for our placeholder
+        selectDifficulty.appendChild(option);//for our placeholder
+        filtListCont.appendChild(selectDifficulty);  
+        const listDifficulty = createSetFilter(data,"difficulty");
+            listDifficulty.forEach(difficulty => {
+                const option = document.createElement('option');
+                option.value = difficulty;
+                option.textContent = difficulty;
+                selectDifficulty.appendChild(option);
+            });
+        
+        }
+    container.innerHTML = '';
+
+}
 
 function displayRecipes(recipes, container = document.getElementById('recipesContainer')) {
     container.innerHTML = '';
@@ -292,7 +353,7 @@ function saveData() {
     const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     const selected = JSON.parse(localStorage.getItem('selectedRecipes')) || [];
     const data = JSON.stringify({
-        version: "v6.10",
+        version: "v7.1",
         last_recipes: last_recipesList,
         favorites: favorites,
         selected: selected
@@ -407,7 +468,11 @@ async function initializeApp() {
         }
     });
 
-    
+    document.getElementById('allRecipesRandomPageBtn').addEventListener('click', () => {
+        allRecipesRandomPage(data);
+        document.getElementById('recipesContainer').style.display = 'grid';
+        document.getElementById('selectionOfWeekContainer').style.display = 'none';
+    });
 
 
     // Initial load
